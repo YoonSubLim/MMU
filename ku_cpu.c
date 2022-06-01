@@ -30,6 +30,8 @@ int main(int argc, char *argv[])
 
 	pmem_size = strtol(argv[2], NULL, 10);
 	swap_size = strtol(argv[3], NULL, 10);
+
+	// 할당받은 pmem 주소값 return
 	pmem = ku_mmu_init(pmem_size, swap_size);
 	if(!pmem){
 		printf("ku_cpu: Fail to allocate the physical memory\n");
@@ -39,6 +41,7 @@ int main(int argc, char *argv[])
 
 	while(fscanf(fd, "%hhd %hhd", &fpid, &va) != EOF){
 
+		// process ID가 달라졌다면
 		if(pid != fpid){
 			if(ku_run_proc(fpid, &ku_cr3) == 0)
 				pid = fpid; /* context switch */
@@ -49,6 +52,7 @@ int main(int argc, char *argv[])
 			} 
 		}
 
+		// process의 cr3 값으로 traverse
 		pa = ku_traverse(ku_cr3, va);
 		if(pa == 0){
 			if(ku_page_fault(pid, va) != 0){
@@ -60,6 +64,7 @@ int main(int argc, char *argv[])
 
 			/* Retry after page fault */
 			pa = ku_traverse(ku_cr3, va); 
+			// 밑 내용 도달하면 안됨. 한번에 매핑 완료를 가정.
 			if(pa == 0){
 				printf("ku_cpu: Addr translation is failed\n");
 				ku_mmu_fin(fd, pmem);
