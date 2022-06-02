@@ -39,6 +39,7 @@ int main(int argc, char *argv[])
 		return 1;
 	}
 
+	// %hhd 중 h는 자료형 한단계 감소. 숫자형 표시. 즉 char를 숫자로 표현.
 	while(fscanf(fd, "%hhd %hhd", &fpid, &va) != EOF){
 
 		// process ID가 달라졌다면
@@ -52,7 +53,7 @@ int main(int argc, char *argv[])
 			} 
 		}
 
-		// process의 cr3 값으로 traverse
+		// process의 cr3 값으로 traverse. 실패시 0.
 		pa = ku_traverse(ku_cr3, va);
 		if(pa == 0){
 			if(ku_page_fault(pid, va) != 0){
