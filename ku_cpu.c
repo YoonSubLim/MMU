@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "./ku_mmu.h"
+// #include "./ku_mmu.h"
 
 char ku_traverse(void *ku_cr3, char va);
 
@@ -16,6 +16,9 @@ int main(int argc, char *argv[])
 	char fpid, pid=0, va, pa;
 	unsigned int pmem_size, swap_size;
 	void *ku_cr3, *pmem=NULL;
+
+	// printf("%d", sizeof(ku_cr3)); // size 8
+	// printf("%d", sizeof(temp)); // int* temp -> size 8
 
 	if(argc != 4){
 		printf("ku_cpu: Wrong number of arguments\n");
@@ -44,7 +47,7 @@ int main(int argc, char *argv[])
 
 		// process ID가 달라졌다면
 		if(pid != fpid){
-			if(ku_run_proc(fpid, &ku_cr3) == 0)
+			if(ku_run_proc(fpid, &ku_cr3) == 0) // 
 				pid = fpid; /* context switch */
 			else{
 				printf("ku_cpu: Context switch is failed\n");
